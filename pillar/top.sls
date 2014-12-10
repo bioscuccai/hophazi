@@ -1,0 +1,6 @@
+base:
+  '*':
+    - redmine
+dev:
+  '*':
+    - redmine

@@ -1,0 +1,4 @@
+pidfile "{{redmine_dir}}/tmp/puma/pid"
+state_path "{{redmine_dir}}/tmp/puma/state"
+bind "tcp://0.0.0.0:{{redmine_port}}"
+activate_control_app

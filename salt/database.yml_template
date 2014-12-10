@@ -1,0 +1,13 @@
+production:
+    adapter: mysql2
+    database: {{redmine_db_name_prod}}
+    host: localhost
+    username: {{redmine_db_user}}
+    password: {{redmine_db_pw}}
+
+development:
+    adapter: mysql2
+    database: {{redmine_db_name_dev}}
+    host: localhost
+    username: {{redmine_db_user}}
+    password: {{redmine_db_pw}}
