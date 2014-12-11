@@ -40,7 +40,7 @@ A Salt MySQL state-jei segítségével hozunk létre felhasználót, adatbázist
 
 Mivel nem találtam egyszerű megoldást arra, hogy RVM környezeten belül hogyan lehet parancsokat végrehajtani, itt is kénytelen voltam shell script-et használni. Ez
 
-* telepíti/letölti a szükséges gem-eket (bundle install)
+* telepíti/letölti a szükséges gem-eket (`bundle install`)
 * létrehozza az adatbázist development és production mode-ra (`rake db:create db:migrate`)
 * generál titkosító kulcsot a cookie-knak
 
@@ -72,6 +72,20 @@ Végezetül szükséges a reverse proxy beállítása, amely segítségével kí
 
 Így szerverünk újraindítása után a megfelelő oldalra ellátogatva futó Redmine-t kapunk.
 
+# Tűzfal
+
+Az alul linkelt tűzfal script engedélyez portokat attól függően, hogy milyen szolgáltatásokat telepítettünk. Az nginx portját a telepítéskor megadottra állítja.
+Az FTP miatt a `ip_conntrack_ftp` modul betöltését kérnünk kell, különben nem fog menni a tűzfal szabályok mellett.
+
+# Backup
+
+Biztonsági mentésre a Backup gem-et használom, amivel a megadott adatbázist mentem. Ezt cron-nal ütemezem, amit Salt-on keresztül konfigurálok be. A konfiguráció szintén Salt-on keresztül történik.
+
+* telepíti a backup gemet és létrehoz egy üres backup model-t
+* ebbe a modelbe megadja az adatbázis elérhetőségét
+* az `/etc/cron.allow`-ban engedélyezi az rvm felhasználónak a periodikus feladatvégrehajtást.
+* Salt-on szerkezti az rvm felhasználó crontab-ját megadott intervallum szerinti mentésre
+
 # Beállítások
 
 ## Redmine pillar
@@ -93,6 +107,7 @@ Végezetül szükséges a reverse proxy beállítása, amely segítségével kí
 * `wants_sshd`: Telepítve legyen-e az OpenSSH
 * `wants_vsftpd`: Telepítve legyen-e a VsFTPD
 * `wants_ping`: Ping engedélyezve legyen-e
+* `backup_intervel`: Biztonsági mentés gyakorisága
 
 # Használat
 
@@ -100,16 +115,26 @@ A következő state-ket írtam:
 
 * `rvm`: Feltelepíti magát a Redmine-t
 * `extraservices`: Feltelepíti az OpenSSH-t és a VsFTPD-t és beállítja a tűzfalat
+* `backup_interval`: Biztonsági mentés inicializálása
 
 Igen, ez egyátalán nem logikus, de nem merek hozzányúlni.
 
 # Források
 
 Tűzfal: <http://blog.bobbyallen.me/2012/08/23/configuring-iptables-for-a-ubuntu-12-04-web-server/>
+
 Előfordított Ruby-k: <https://github.com/wayneeseguin/rvm/blob/master/config/remote>
+
 Rails, Puma, nginx: <http://ruby-journal.com/how-to-setup-rails-app-with-puma-and-nginx/>
+
 Redmine, Puma(ez valami unortodox init scriptet használ): <https://blog.rudeotter.com/install-redmine-with-nginx-puma-and-mariadbmysql-on-ubuntu-14-04/>
+
 Puma, Ubuntu: <https://github.com/puma/puma/tree/master/tools/jungle/upstart>
+
 Előfordított Ruby: <http://syntaxi.net/2012/12/21/installing-binaries-in-rvm/>
 
-(In case any of you folks from above somehow manage to end up here: this is for homework in which I had to find a way to deploy Redmine using Salt Stack. Thanks for the guides, I owe all of you a beer!)
+Vsftpd tűzfal: <http://serverfault.com/questions/38398/allowing-ftp-with-iptables>
+
+Backup: <http://meskyanichi.github.io/backup/v4/>
+
+(In case any of you folks from above somehow manage to end up here: this is for homework for which I had to find a way to deploy Redmine using Salt Stack. Thanks for the guides, I owe all of you a beer!)

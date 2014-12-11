@@ -23,4 +23,7 @@ openssh-server:
         wants_ping: {{pillar.get("wants_ping", False)}}
         wants_vsftpd: {{pillar.get("wants_vsftpd", False)}}
         wants_sshd: {{pillar.get("wants_sshd", False)}}
-        
+
+apply_iptables:
+  cmd.run:
+    - name: "yes|iptables-apply"

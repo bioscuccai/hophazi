@@ -11,3 +11,5 @@ redmine_port: 9024
 redmine_url: rvm13
 redmine_name: rm_rvm13
 nginx_port: 83
+
+backup_interval: 30
