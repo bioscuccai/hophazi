@@ -1,4 +1,3 @@
-zzz: abc
 rvm_user: rvm13
 redmine_dir: /home/rvm13/redminedir
 redmine_db_name_prod: redmineu

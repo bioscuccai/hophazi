@@ -67,7 +67,49 @@ A Puma Github oldalán elérhetők Ubuntu-specifikus Upstart config-ok, amivel a
 Végezetül szükséges a reverse proxy beállítása, amely segítségével kívülről érhetjük el a Redmine-t. Az nginx-re szinten egyszerű konfigurálhatósága miatt esett választásom.
 
 * az `/etc/nginx/sites-enabled/`-ből töröljük az alapértelmezett oldalra mutató symlink-et
-* Salt-on keresztül felmásoljuk az oldal config sablonját az `/etc/nginx/sites-available`-be, amelyben megadjuk a futó alkalamzás elérhetőségét
+* Salt-on keresztül felmásoljuk az oldal config sablonját az `/etc/nginx/sites-available`-be, amelyben megadjuk a futó alkalmazás elérhetőségét
 * a kapott konfig fájlunkról symlink-et készítünk a sites-enabled-be
 
 Így szerverünk újraindítása után a megfelelő oldalra ellátogatva futó Redmine-t kapunk.
+
+# Beállítások
+
+## Redmine pillar
+
+* `rvm_user`: Az a user, akinek az RVM-et telepíteni akarjuk
+* `redmine_dir`: A Redmine telepítési könyvtára
+* `redmine_db_name_prod`: Production adatbázis neve
+* `redmine_db_name_dev`: Fejlesztő adatbázis neve
+* `redmine_db_user`: Adatbázis felhasználó
+* `redmine_db_pw`: Adatbázis jelszó
+* `puma_user`: Milyen felhasználóként fusson a Puma
+* `redmine_port`: Milyen porton fusson a Puma a helyi gépen
+* `redmine_url`: (deprecated)
+* `redmine_name`: Az nginx config-ban mi legyen az upstream neve
+* `nginx_port`: Melyik porton fusson az nginx
+
+## Extraservices pillar
+
+* `wants_sshd`: Telepítve legyen-e az OpenSSH
+* `wants_vsftpd`: Telepítve legyen-e a VsFTPD
+* `wants_ping`: Ping engedélyezve legyen-e
+
+# Használat
+
+A következő state-ket írtam:
+
+* `rvm`: Feltelepíti magát a Redmine-t
+* `extraservices`: Feltelepíti az OpenSSH-t és a VsFTPD-t és beállítja a tűzfalat
+
+Igen, ez egyátalán nem logikus, de nem merek hozzányúlni.
+
+# Források
+
+Tűzfal: <http://blog.bobbyallen.me/2012/08/23/configuring-iptables-for-a-ubuntu-12-04-web-server/>
+Előfordított Ruby-k: <https://github.com/wayneeseguin/rvm/blob/master/config/remote>
+Rails, Puma, nginx: <http://ruby-journal.com/how-to-setup-rails-app-with-puma-and-nginx/>
+Redmine, Puma(ez valami unortodox init scriptet használ): <https://blog.rudeotter.com/install-redmine-with-nginx-puma-and-mariadbmysql-on-ubuntu-14-04/>
+Puma, Ubuntu: <https://github.com/puma/puma/tree/master/tools/jungle/upstart>
+Előfordított Ruby: <http://syntaxi.net/2012/12/21/installing-binaries-in-rvm/>
+
+(In case any of you folks from above somehow manage to end up here: this is for homework in which I had to find a way to deploy Redmine using Salt Stack. Thanks for the guides, I owe all of you a beer!)

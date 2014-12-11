@@ -1,6 +1,4 @@
 base:
   '*':
     - redmine
-dev:
-  '*':
-    - redmine
+    - extraservices
